@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>New Jersey Weather</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
+            color: #222;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+        }
+
+        header h1 {
+            font-size: 40px;
+        }
+
+        main {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .weather-box {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .temperature {
+            font-size: 70px;
+            font-weight: bold;
+            margin: 20px;
+        }
+
+        .location {
+            font-size: 28px;
+        }
+
+        .forecast {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .day {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            flex: 1;
+        }
+
+        .day h3 {
+            margin-top: 0;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 30px;
+        }
+
+        @media (max-width: 700px) {
+            .forecast {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>New Jersey Weather</h1>
+        <p>Weather Forecast for New Jersey, USA</p>
+    </header>
+
+    <main>
+
+        <div class="weather-box">
+
+            <div class="location">
+                Princeton, New Jersey
+            </div>
+
+            <div class="temperature">
+                70°F
+            </div>
+
+            <h2>Partly Sunny</h2>
+
+            <p>Humidity: 50%</p>
+            <p>Wind: 6 mph</p>
+            <p>Chance of Rain: 10%</p>
+
+        </div>
+
+
+        <h2 style="color:white;">5-Day Forecast</h2>
+
+        <div class="forecast">
+
+            <div class="day">
+                <h3>Today</h3>
+                <p>Partly Sunny</p>
+                <strong>70°F</strong>
+            </div>
+
+            <div class="day">
+                <h3>Sunday</h3>
+                <p>Rain</p>
+                <strong>63°F</strong>
+            </div>
+
+            <div class="day">
+                <h3>Monday</h3>
+                <p>Cloudy</p>
+                <strong>71°F</strong>
+            </div>
+
+            <div class="day">
+                <h3>Tuesday</h3>
+                <p>Showers</p>
+                <strong>73°F</strong>
+            </div>
+
+            <div class="day">
+                <h3>Wednesday</h3>
+                <p>Sunny</p>
+                <strong>66°F</strong>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer>
+        <p>New Jersey Weather Website</p>
+    </footer>
+
+</body>
+
+</html>

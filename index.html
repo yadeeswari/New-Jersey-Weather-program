@@ -8,35 +8,81 @@
     <title>New Jersey Weather</title>
 
     <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
+            font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #74b9ff, #a29bfe);
             color: #222;
+            min-height: 100vh;
         }
 
         header {
             text-align: center;
             color: white;
-            padding: 40px 20px;
+            padding: 35px 20px;
         }
 
         header h1 {
-            font-size: 40px;
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 18px;
         }
 
         main {
-            max-width: 900px;
+            max-width: 1000px;
             margin: auto;
             padding: 20px;
         }
 
-        .weather-box {
+        .location-box {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        select {
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin: 10px;
+        }
+
+        button {
+            padding: 12px 20px;
+            background: #0984e3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0767b1;
+        }
+
+        .current-weather {
             background: white;
             border-radius: 20px;
             padding: 30px;
             text-align: center;
             box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .location {
+            font-size: 28px;
+            font-weight: bold;
         }
 
         .temperature {
@@ -45,26 +91,76 @@
             margin: 20px;
         }
 
-        .location {
-            font-size: 28px;
+        .condition {
+            font-size: 24px;
+            font-weight: bold;
         }
 
-        .forecast {
-            display: flex;
+        .details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 15px;
-            margin-top: 25px;
+            margin-top: 20px;
         }
 
-        .day {
+        .detail-card {
             background: white;
             padding: 20px;
             border-radius: 15px;
             text-align: center;
-            flex: 1;
+        }
+
+        .detail-card h3 {
+            margin-bottom: 10px;
+        }
+
+        .detail-card p {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .forecast-title {
+            color: white;
+            margin-top: 30px;
+        }
+
+        .forecast {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+
+        .day {
+            background: white;
+            padding: 20px 10px;
+            border-radius: 15px;
+            text-align: center;
         }
 
         .day h3 {
             margin-top: 0;
+        }
+
+        .day .weather {
+            font-weight: bold;
+            margin: 12px 0;
+        }
+
+        .day .high {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .day .low {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        #loading {
+            color: white;
+            text-align: center;
+            font-size: 18px;
+            margin: 20px;
         }
 
         footer {
@@ -74,82 +170,443 @@
         }
 
         @media (max-width: 700px) {
+
+            header h1 {
+                font-size: 32px;
+            }
+
+            .details {
+                grid-template-columns: 1fr;
+            }
+
             .forecast {
-                flex-direction: column;
+                grid-template-columns: 1fr 1fr;
             }
         }
+
     </style>
+
 </head>
+
 
 <body>
 
     <header>
+
         <h1>New Jersey Weather</h1>
-        <p>Weather Forecast for New Jersey, USA</p>
+
+        <p>Live Weather Forecast for New Jersey, USA</p>
+
     </header>
+
 
     <main>
 
-        <div class="weather-box">
+        <div class="location-box">
 
-            <div class="location">
-                Princeton, New Jersey
-            </div>
+            <label for="city">
+                Choose a New Jersey location:
+            </label>
 
-            <div class="temperature">
-                70°F
-            </div>
+            <select id="city">
 
-            <h2>Partly Sunny</h2>
+                <option value="Princeton">Princeton</option>
 
-            <p>Humidity: 50%</p>
-            <p>Wind: 6 mph</p>
-            <p>Chance of Rain: 10%</p>
+                <option value="Newark">Newark</option>
+
+                <option value="Jersey City">Jersey City</option>
+
+                <option value="Trenton">Trenton</option>
+
+                <option value="Atlantic City">Atlantic City</option>
+
+                <option value="Paterson">Paterson</option>
+
+            </select>
+
+            <button onclick="getWeather()">
+                Get Weather
+            </button>
 
         </div>
 
 
-        <h2 style="color:white;">5-Day Forecast</h2>
+        <div id="loading">
+            Loading live weather...
+        </div>
+
+
+        <div class="current-weather">
+
+            <div class="location" id="location">
+                Princeton, New Jersey
+            </div>
+
+            <div class="temperature" id="temperature">
+                --
+            </div>
+
+            <div class="condition" id="condition">
+                Loading...
+            </div>
+
+        </div>
+
+
+        <div class="details">
+
+            <div class="detail-card">
+
+                <h3>Humidity</h3>
+
+                <p id="humidity">
+                    --
+                </p>
+
+            </div>
+
+
+            <div class="detail-card">
+
+                <h3>Wind Speed</h3>
+
+                <p id="wind">
+                    --
+                </p>
+
+            </div>
+
+
+            <div class="detail-card">
+
+                <h3>Rain Chance</h3>
+
+                <p id="rain">
+                    --
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <h2 class="forecast-title">
+            5-Day Forecast
+        </h2>
+
 
         <div class="forecast">
 
             <div class="day">
-                <h3>Today</h3>
-                <p>Partly Sunny</p>
-                <strong>70°F</strong>
+
+                <h3 id="day1">
+                    --
+                </h3>
+
+                <div class="weather" id="weather1">
+                    --
+                </div>
+
+                <div class="high" id="high1">
+                    --
+                </div>
+
+                <div class="low" id="low1">
+                    --
+                </div>
+
             </div>
 
-            <div class="day">
-                <h3>Sunday</h3>
-                <p>Rain</p>
-                <strong>63°F</strong>
-            </div>
 
             <div class="day">
-                <h3>Monday</h3>
-                <p>Cloudy</p>
-                <strong>71°F</strong>
+
+                <h3 id="day2">
+                    --
+                </h3>
+
+                <div class="weather" id="weather2">
+                    --
+                </div>
+
+                <div class="high" id="high2">
+                    --
+                </div>
+
+                <div class="low" id="low2">
+                    --
+                </div>
+
             </div>
 
-            <div class="day">
-                <h3>Tuesday</h3>
-                <p>Showers</p>
-                <strong>73°F</strong>
-            </div>
 
             <div class="day">
-                <h3>Wednesday</h3>
-                <p>Sunny</p>
-                <strong>66°F</strong>
+
+                <h3 id="day3">
+                    --
+                </h3>
+
+                <div class="weather" id="weather3">
+                    --
+                </div>
+
+                <div class="high" id="high3">
+                    --
+                </div>
+
+                <div class="low" id="low3">
+                    --
+                </div>
+
+            </div>
+
+
+            <div class="day">
+
+                <h3 id="day4">
+                    --
+                </h3>
+
+                <div class="weather" id="weather4">
+                    --
+                </div>
+
+                <div class="high" id="high4">
+                    --
+                </div>
+
+                <div class="low" id="low4">
+                    --
+                </div>
+
+            </div>
+
+
+            <div class="day">
+
+                <h3 id="day5">
+                    --
+                </h3>
+
+                <div class="weather" id="weather5">
+                    --
+                </div>
+
+                <div class="high" id="high5">
+                    --
+                </div>
+
+                <div class="low" id="low5">
+                    --
+                </div>
+
             </div>
 
         </div>
 
     </main>
 
+
     <footer>
-        <p>New Jersey Weather Website</p>
+
+        <p>
+            Live weather powered by Open-Meteo
+        </p>
+
     </footer>
+
+
+    <script>
+
+        const cities = {
+
+            "Princeton": {
+                latitude: 40.3573,
+                longitude: -74.6672
+            },
+
+            "Newark": {
+                latitude: 40.7357,
+                longitude: -74.1724
+            },
+
+            "Jersey City": {
+                latitude: 40.7178,
+                longitude: -74.0431
+            },
+
+            "Trenton": {
+                latitude: 40.2171,
+                longitude: -74.7429
+            },
+
+            "Atlantic City": {
+                latitude: 39.3643,
+                longitude: -74.4229
+            },
+
+            "Paterson": {
+                latitude: 40.9168,
+                longitude: -74.1718
+            }
+
+        };
+
+
+        function getWeatherDescription(code) {
+
+            if (code === 0) {
+                return "Clear Sky";
+            }
+
+            if (code === 1 || code === 2) {
+                return "Partly Cloudy";
+            }
+
+            if (code === 3) {
+                return "Cloudy";
+            }
+
+            if (code >= 45 && code <= 48) {
+                return "Foggy";
+            }
+
+            if (code >= 51 && code <= 57) {
+                return "Drizzle";
+            }
+
+            if (code >= 61 && code <= 67) {
+                return "Rain";
+            }
+
+            if (code >= 71 && code <= 77) {
+                return "Snow";
+            }
+
+            if (code >= 80 && code <= 82) {
+                return "Rain Showers";
+            }
+
+            if (code >= 85 && code <= 86) {
+                return "Snow Showers";
+            }
+
+            if (code >= 95) {
+                return "Thunderstorm";
+            }
+
+            return "Unknown";
+        }
+
+
+        function getDayName(dateString) {
+
+            const date = new Date(dateString + "T12:00:00");
+
+            return date.toLocaleDateString("en-US", {
+                weekday: "short"
+            });
+
+        }
+
+
+        async function getWeather() {
+
+            const cityName =
+                document.getElementById("city").value;
+
+            const city =
+                cities[cityName];
+
+            document.getElementById("loading").textContent =
+                "Loading live weather...";
+
+
+            const url =
+                `https://api.open-meteo.com/v1/forecast?latitude=${city.latitude}&longitude=${city.longitude}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=America%2FNew_York&forecast_days=5`;
+
+
+            try {
+
+                const response =
+                    await fetch(url);
+
+                const data =
+                    await response.json();
+
+
+                document.getElementById("location").textContent =
+                    cityName + ", New Jersey";
+
+
+                document.getElementById("temperature").textContent =
+                    Math.round(data.current.temperature_2m) + "°F";
+
+
+                document.getElementById("condition").textContent =
+                    getWeatherDescription(
+                        data.current.weather_code
+                    );
+
+
+                document.getElementById("humidity").textContent =
+                    data.current.relative_humidity_2m + "%";
+
+
+                document.getElementById("wind").textContent =
+                    Math.round(data.current.wind_speed_10m) + " mph";
+
+
+                document.getElementById("rain").textContent =
+                    data.daily.precipitation_probability_max[0] + "%";
+
+
+                for (let i = 0; i < 5; i++) {
+
+                    document.getElementById("day" + (i + 1)).textContent =
+                        getDayName(data.daily.time[i]);
+
+
+                    document.getElementById("weather" + (i + 1)).textContent =
+                        getWeatherDescription(
+                            data.daily.weather_code[i]
+                        );
+
+
+                    document.getElementById("high" + (i + 1)).textContent =
+                        Math.round(
+                            data.daily.temperature_2m_max[i]
+                        ) + "°F";
+
+
+                    document.getElementById("low" + (i + 1)).textContent =
+                        "Low: " +
+                        Math.round(
+                            data.daily.temperature_2m_min[i]
+                        ) + "°F";
+
+                }
+
+
+                document.getElementById("loading").textContent =
+                    "Weather updated with live data.";
+
+            }
+
+            catch (error) {
+
+                document.getElementById("loading").textContent =
+                    "Unable to load weather data.";
+
+                console.error(error);
+
+            }
+
+        }
+
+
+        getWeather();
+
+    </script>
 
 </body>
 
